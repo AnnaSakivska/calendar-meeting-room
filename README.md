@@ -1,6 +1,3 @@
-# calendar-meeting-room
-
-
 # Calendar Meeting Room 
 
 #### [Demo](https://annasakivska.github.io/calendar-meeting-room/dist/index.html)
