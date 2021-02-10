@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint --debug ./src/js/main.js",
     "buildlight": "parcel build src/index.html --no-source-maps --no-minify --public-url . --no-cache",
-    "build": "parcel build src/index.html --no-source-maps --public-url . --no-cache"
+    "build": "parcel build src/index.html --no-source-maps --public-url . --no-cache",
+    "deploy": "npm run build && git add . && git commit -m 'latest build' && git push origin master"
   },
   "keywords": [],
   "author": "",
