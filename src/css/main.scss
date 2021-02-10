@@ -1,0 +1,449 @@
+@import '../../node_modules/scss-reset/reset';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,300&family=Ubuntu:wght@300;400;500;700&display=swap');
+@import './variables.scss';
+@import './mixins.scss';
+@import './text.scss';
+
+html {
+  font-size: 62.5%;
+  font-family: $main-font;
+}
+
+body {
+  background-color: rgba($main-color, 0.1);
+}
+
+.calendar-wrapper {
+  max-width: 80rem;
+  min-width: 48rem;
+  margin: 2rem auto;
+}
+
+.successful-message {
+  position: absolute;
+  width: 100%;
+  height: 5rem;
+  background-color: rgba(115, 243, 158, 0.534);
+  top: -14rem;
+  padding: 0 10%;
+  font-size: 1.8rem;
+  transition: all 0.3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 2;
+
+  .delete-popup {
+    position: relative;
+    top: 30%;
+    width: 40rem;
+    border: 2px solid darken($main-color, 30%);
+    border-radius: 6px;
+    background-color: $delete-messaga;
+    margin: 0 auto;
+    padding: 2rem 3rem;
+
+    p {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    &__btns {
+      width: fit-content;
+      margin: 0 auto;
+
+      button {
+        background-color: lighten(#b6de62, 20%);
+
+        &:first-child {
+          margin-right: 3rem;
+        }
+      }
+    }
+  }
+}
+
+// Header
+.calendar-header {
+  margin-top: 6rem;
+  height: 8rem;
+  margin-bottom: 2rem;
+  @include flex-align-center;
+
+  &__navbar {
+    display: flex;
+  }
+
+  &__new-ivent {
+    outline: none;
+    width: 16rem;
+    height: 4rem;
+    border: 2px solid $title-color;
+    padding: 0 1rem;
+    margin-left: 2rem;
+    font-family: $main-font;
+    font-size: 1.6rem;
+    background-color: lighten($main-color, 70%);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    @include font-navbar;
+  }
+
+  &__select-wrapper {
+    position: relative;
+    user-select: none;
+    width: 16rem;
+  }
+
+  &__select {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-color: darken($main-color, 60%);
+  }
+
+  &__trigger {
+    position: relative;
+    padding: 0 1rem;
+    height: 4rem;
+    background: #ffffff;
+    cursor: pointer;
+    border: 2px solid darken($main-color, 60%);
+    @include font-navbar;
+    @include flex-align-center;
+  }
+
+  &__options {
+    position: absolute;
+    display: block;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 2px solid darken($main-color, 50%);
+    border-top: 0;
+    background: #fff;
+    transition: all 0.5s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  &__select.open &__options {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  &__option {
+    position: relative;
+    display: block;
+    padding: 0 2rem 0 2rem;
+    font-size: 1.4rem;
+    font-weight: 300;
+    line-height: 2rem;
+    cursor: pointer;
+    transition: all 0.5s;
+
+    &:hover {
+      cursor: pointer;
+      background-color: lighten($main-color, 20%);
+    }
+
+    &.selected {
+      color: #ffffff;
+      background-color: darken($main-color, 20%);
+    }
+  }
+
+  .custom-option:hover {
+    cursor: pointer;
+    background-color: lighten($main-color, 20%);
+  }
+
+  .custom-option.selected {
+    color: #ffffff;
+    background-color: darken($main-color, 20%);
+  }
+
+  .arrow {
+    position: relative;
+    height: 12px;
+    width: 12px;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0px;
+      width: 0.12rem;
+      height: 100%;
+      transition: all 0.5s;
+    }
+    &::before {
+      left: -4px;
+      transform: rotate(-45deg);
+      background-color: #000;
+    }
+    &::after {
+      left: 4px;
+      transform: rotate(45deg);
+      background-color: #000;
+    }
+  }
+
+  .open .arrow::before {
+    left: -4px;
+    transform: rotate(45deg);
+  }
+  .open .arrow::after {
+    left: 4px;
+    transform: rotate(-45deg);
+  }
+}
+
+// Callendar
+.calendar {
+  width: 100%;
+  border: 1px solid darken($main-color, 50%);
+  border-bottom: 0;
+
+  tr {
+    height: 4rem;
+    display: flex;
+
+    th,
+    td {
+      width: calc(100% / 6);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid darken($main-color, 50%);
+      border-collapse: collapse;
+    }
+  }
+
+  &__top-row {
+    background-color: darken(rgba($main-color, 0.2), 20%);
+  }
+
+  &__row td {
+    font-size: 1.6rem;
+  }
+
+  &__meeting-space {
+    width: 100%;
+    height: 100%;
+    @include flex-align-center;
+  }
+
+  .occupied {
+    padding: 0 0.8rem;
+    background-color: darken(rgba($main-color, 0.6), 10%);
+  }
+
+  &__meeting {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tooltip {
+    width: 90%;
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltiptext {
+    visibility: hidden;
+    width: 16rem;
+    background-color: darken(rgba($main-color, 0.6), 40%);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 14px;
+    position: absolute;
+    bottom: 4rem;
+    left: -2.2rem;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  .tooltiptext:before {
+    content: '';
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid darken(rgba($main-color, 0.6), 40%);
+    border-bottom: 10px solid transparent;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -20px;
+  }
+}
+
+// New event
+.new-event {
+  position: relative;
+  margin-top: 14rem;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  grid-row-gap: 3.6rem;
+
+  &__warning {
+    position: absolute;
+    width: 100%;
+    height: 5rem;
+    background-color: rgba(240, 36, 36, 0.5);
+    top: -14rem;
+    padding: 0 10%;
+    font-size: 1.8rem;
+    transition: all 0.3;
+    @include flex-align-center;
+
+    &-message {
+      margin-left: 3rem;
+    }
+  }
+
+  &__feilds {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 2rem;
+    align-items: center;
+
+    & > * {
+      height: 3.8rem;
+      font-size: 2rem;
+      @include flex-align-center;
+    }
+  }
+
+  input,
+  select,
+  &__participants {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 24rem;
+    font-size: 1.6rem;
+    border-radius: 4px;
+    padding: 2px 10px;
+    border: 0.5px solid lightgrey;
+    background-color: white;
+  }
+
+  &__participants {
+    padding-right: 3rem;
+    @include flex-align-center;
+  }
+
+  .styled-select::after,
+  &__participants::after {
+    position: absolute;
+    content: '';
+    top: 50%;
+    right: 1.6rem;
+    width: 1rem;
+    height: 1rem;
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-60%) rotate(45deg);
+    border: 1px solid #000;
+    border-width: 0 2px 2px 0;
+  }
+
+  .up:after {
+    height: 1rem;
+    width: 1rem;
+    -webkit-transform: rotate(-135deg);
+    transform: rotate(-135deg);
+    margin-bottom: -1rem;
+  }
+
+  .styled-select .decorated {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .styled-select {
+    position: relative;
+  }
+
+  &__participants-menu {
+    position: absolute;
+    top: 9.6rem;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 24rem;
+    max-height: 16rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 300;
+
+    .menu-option {
+      padding: 2px 1rem 2px;
+      font-size: 1.8rem;
+      cursor: pointer;
+
+      &:hover,
+      &:active {
+        background-color: rgba(102, 146, 240, 0.658);
+        color: #fff;
+      }
+    }
+
+    .selected-person {
+      background-color: rgba(102, 146, 240, 0.658);
+      color: #fff;
+    }
+  }
+
+  &__btns {
+    grid-row: 2;
+    grid-column: 2;
+
+    & > * {
+      background-color: $new-event-btns;
+      font-weight: 500;
+    }
+
+    button[type='submit'] {
+      margin-left: 2rem;
+    }
+  }
+}
+
+// Other
+.cup {
+  cursor: pointer;
+}
+
+.d-none {
+  display: none;
+}
+
+button {
+  width: 11rem;
+  height: 3.4rem;
+  font-size: 1.6rem;
+  border: 1px solid $title-color;
+  border-radius: 2px;
+}

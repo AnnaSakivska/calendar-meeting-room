@@ -1,0 +1,32 @@
+{
+  "name": "calendar-meeting-room",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --debug ./src/js/main.js",
+    "buildlight": "parcel build src/index.html --no-source-maps --no-minify --public-url . --no-cache",
+    "build": "parcel build src/index.html --no-source-maps --public-url . --no-cache"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "prettier": "2.2.1",
+    "sass": "^1.32.6"
+  },
+  "dependencies": {
+    "airbnb-browser-shims": "^3.3.0",
+    "core-js": "^3.8.3",
+    "regenerator-runtime": "^0.13.7",
+    "scss-reset": "^1.1.10"
+  }
+}

@@ -1,0 +1,12 @@
+@mixin font-navbar {
+  font-family: $main-font;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: #3b3b3b;
+}
+
+@mixin flex-align-center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
