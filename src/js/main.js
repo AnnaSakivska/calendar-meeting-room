@@ -3,7 +3,6 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import 'airbnb-browser-shims'
-import './drag_&_drop'
 
 const calendarWindowDOM = document.querySelector('.calendar__main-page')
 const newEventWindowDOM = document.querySelector('.new-event')
