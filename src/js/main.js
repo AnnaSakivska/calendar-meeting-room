@@ -1,6 +1,9 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-param-reassign */
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import 'airbnb-browser-shims'
+import './drag_&_drop'
 
 const calendarWindowDOM = document.querySelector('.calendar__main-page')
 const newEventWindowDOM = document.querySelector('.new-event')
@@ -94,7 +97,7 @@ selectNewEvenDOM.forEach(select => select.addEventListener('click', (ev) => ev.t
 // 2. SUBMIT & CANCEL NEW EVENT
 function addWarning() {
   warningMessage.classList.remove('d-none')
-  setTimeout(() => warningMessage.classList.add('d-none'), 8000)
+  setTimeout(() => warningMessage.classList.add('d-none'), 6000)
 }
 
 function closeWarning() {
@@ -108,7 +111,6 @@ function removeEventsDOM() {
   clendarMeetingSpotDom.forEach(spot => {
     // eslint-disable-next-line no-param-reassign
     spot.innerHTML = ''
-    spot.classList.remove('occupied')
   })
 }
 
@@ -133,29 +135,30 @@ function closeNewEventWindow() {
 }
 
 function submitNewEvent() {
-  const worningMessage = warningMessage.children[0].children[1]
+  const warningMessageText = warningMessage.children[0].children[1]
   const participantsArray = []
   let planningMeeting = {}
   meetingparticipants.forEach(v => participantsArray.push(v))
+  warningMessage.style.top = '-14rem'
 
   closeWarning()
   if (!meetingThemeInputDOM.value) {
-    worningMessage.innerText = 'Please, enter the name of your meeting!'
+    warningMessageText.innerText = 'Please, enter the name of your meeting!'
     addWarning()
     return
   }
   if (meetingparticipants.size === 0) {
-    worningMessage.innerText = 'Please, choose participants for your meeting!'
+    warningMessageText.innerText = 'Please, choose participants for your meeting!'
     addWarning()
     return
   }
   if (!dayDOM.value) {
-    worningMessage.innerText = 'Please, choose the day of your meeting!'
+    warningMessageText.innerText = 'Please, choose the day of your meeting!'
     addWarning()
     return
   }
   if (!timeDOM.value) {
-    worningMessage.innerText = 'Please, choose the time of your meeting!'
+    warningMessageText.innerText = 'Please, choose the time of your meeting!'
     addWarning()
     return
   }
@@ -168,7 +171,8 @@ function submitNewEvent() {
   }
 
   if (meetings.some(meeting => meeting.time === planningMeeting.time && meeting.day === planningMeeting.day)) {
-    worningMessage.innerText = 'Failed to create the event. Time slot is already booked!'
+    warningMessageText.innerText = 'Failed to create the event. Time slot is already booked!'
+    console.log('should show warning')
     addWarning()
     return
   }
@@ -197,13 +201,11 @@ calendarNameOptions.forEach(option => {
 function insertMeeting(filteredArray) {
   filteredArray.forEach(meeting => {
     const meetingStop = document.getElementById(meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
-    meetingStop.classList.add('occupied')
     meetingStop.innerHTML = `
-                      <p class="tooltip">
-                      <span class="cup calendar__meeting">${meeting.evenName}</span>
-                      <span class="tooltiptext">${meeting.evenName}</span>
-                      </p>
+                      <div class="calendar__meeting-wrapper occupied" id="${meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase()}-drag" draggable="true">
+                      <p class="calendar__meeting">${meeting.evenName}</p>
                       <span class="cup caledar__meeting-remove" id="remove-meeting">&#10006;</span>
+                      </div>
                       `
   })
 }
@@ -241,11 +243,11 @@ let meetingToDelete
 function showDeletePop(e) {
   const { target } = e
   if (target && target.id === 'remove-meeting') {
-    meetingToDelete = meetings.filter((meeting) => target.parentNode.id === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
-    meetingId = target.parentNode.id
+    meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
+    meetingId = target.parentNode.parentNode.id
     deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${meetingToDelete[0].evenName}" event?`
+    deleteMeetingContainer.classList.remove('d-none')
   }
-  deleteMeetingContainer.classList.remove('d-none')
 }
 clendarMeetingSpotDom.forEach(el => el.addEventListener('click', showDeletePop))
 
@@ -255,7 +257,6 @@ function deleteMeeting() {
   meetings = meetings.filter((meeting) => meetingId !== meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
   localStorage.setItem('meetings', JSON.stringify(meetings))
   // delete event from the DOM
-  deleteMeetingDOM.classList.remove('occupied')
   deleteMeetingDOM.innerHTML = ''
   deleteMeetingContainer.classList.add('d-none')
   showSuccessfulMessage(`The "${meetingToDelete[0].evenName}" meeting was successfully deleted!`)
@@ -263,6 +264,64 @@ function deleteMeeting() {
 }
 deleteOkBtn.addEventListener('click', deleteMeeting)
 
-deleteNotBtn.addEventListener('click', () => {
-  deleteMeetingContainer.classList.add('d-none')
-})
+deleteNotBtn.addEventListener('click', () => deleteMeetingContainer.classList.add('d-none'))
+
+// DRAG & DROP 
+let currentWrapperId
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00']
+
+function dragStart(ev) {
+  ev.dataTransfer.effectAllowed = 'move'
+  ev.dataTransfer.setData("text", ev.target.id)
+  setTimeout(() => (this.classList.add('d-none')), 0)
+  this.children[0].classList.add('hold')
+  currentWrapperId = this.id
+}
+
+function dragEnd(ev) {
+  ev.preventDefault()
+  document.getElementById(currentWrapperId).classList.remove('d-none')
+  this.children[0].classList.remove('hold')
+}
+
+function dragOver(ev) {
+  ev.preventDefault()
+}
+
+function drop(ev) {
+  ev.preventDefault()
+  this.classList.remove('d-none')
+
+  if (meetings.some(meeting => meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase() === this.id)) {
+    closeWarning()
+    warningMessage.children[0].children[1].innerHTML = 'Failed to move the event. Time slot is already taken!'
+    warningMessage.style.top = '-6rem'
+    addWarning()
+    return
+  }
+
+  warningMessage.classList.add('d-none')
+  const data = ev.dataTransfer.getData("text")
+  ev.target.appendChild(document.getElementById(data))
+  ev.target.children[0].id = ev.target.id.concat('-', 'drag')
+
+  meetings = meetings.map(meeting => {
+    if (currentWrapperId === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase()) {
+      // eslint-disable-next-line prefer-destructuring
+      meeting.day = daysOfWeek.filter(day => day.substring(0, 2).toLowerCase() === this.id.substring(0, 2))[0]
+      meeting.time = hours.filter(time => time.substring(0, 2) === this.id.substring(3, 5))[0]
+    }
+    return meeting
+  })
+  localStorage.setItem('meetings', JSON.stringify(meetings))
+}
+
+clendarMeetingSpotDom.forEach(el => el.addEventListener('drop', drop))
+clendarMeetingSpotDom.forEach(el => el.addEventListener('dragstart', dragStart))
+clendarMeetingSpotDom.forEach(el => el.addEventListener('dragend', dragEnd))
+clendarMeetingSpotDom.forEach(el => el.addEventListener('dragover', dragOver))
+
+
+
+

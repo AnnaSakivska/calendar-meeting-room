@@ -1,1 +1,200 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><base href="/calendar-meeting-room/dist/"><title>Meeting Room Calendar</title><link rel="stylesheet" href="main.c4b3e737.css"></head><body> <div id="overlay"> <p class="d-none new-event__warning"> <span> <img src="https://img.icons8.com/emoji/36/000000/warning-emoji.png"> <span class="new-event__warning-message"></span> </span> <img class="cup" id="warning-close" src="https://img.icons8.com/plasticine/36/000000/close-window.png"> </p> <p class="successful-message"></p> <div class="d-none delete-container"> <div class="delete-popup"> <p class="roboto-18">Are you sure you want to delete "Theme" event?</p> <div class="delete-popup__btns user-select"> <button class="delete-popup__btn roboto-18 semibold-text" id="delete-not">No</button> <button class="delete-popup__btn roboto-18 semibold-text" id="delete">Yes</button> </div> </div> </div> <main class="calendar-wrapper" id="calendar">  <div class="calendar__main-page"> <div class="calendar-header"> <h1 class="calendar-header__title green-title-text roboto-36 user-select">Calendar</h1> <div class="calendar-header__navbar"> <div class="calendar-header__select-wrapper"> <div class="calendar-header__select"> <div class="calendar-header__trigger"> <span class="user-select">Choose name</span> <div class="arrow"></div> </div> <div class="calendar-header__options user-select"> <span class="calendar-header__option" data-value="all members">All members</span> <span class="calendar-header__option" data-value="john">John</span> <span class="calendar-header__option" data-value="anna">Anna</span> <span class="calendar-header__option" data-value="julia">Julia</span> <span class="calendar-header__option" data-value="sam">Sam</span> <span class="calendar-header__option" data-value="joshua">Joshua</span> <span class="calendar-header__option" data-value="oksana">Oksana</span> <span class="calendar-header__option" data-value="maksym">Maksym</span> </div> </div> </div> <button class="calendar-header__new-ivent cup">New Event &nbsp;&nbsp; &#43;</button> </div> </div> <table class="calendar user-select"> <thead> <tr class="calendar__top-row roboto-18 semibold-text"> <th>Time</th> <th>Mon</th> <th>Tue</th> <th>Wed</th> <th>Thu</th> <th>Fri</th> </tr> </thead> <tbody> <tr class="calendar__row"> <td><div><span>10:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-10" draggable="true"></div></td> <td><div class="calendar__meeting-space" id="tu-10"></div></td> <td><div class="calendar__meeting-space" id="we-10"></div></td> <td><div class="calendar__meeting-space" id="th-10"></div></td> <td><div class="calendar__meeting-space" id="fr-10"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>11:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-11"></div></td> <td><div class="calendar__meeting-space" id="tu-11"></div></td> <td><div class="calendar__meeting-space" id="we-11"></div></td> <td><div class="calendar__meeting-space" id="th-11"></div></td> <td><div class="calendar__meeting-space" id="fr-11"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>12:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-12"></div></td> <td><div class="calendar__meeting-space" id="tu-12"></div></td> <td><div class="calendar__meeting-space" id="we-12"></div></td> <td><div class="calendar__meeting-space" id="th-12"></div></td> <td><div class="calendar__meeting-space" id="fr-12"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>13:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-13"></div></td> <td><div class="calendar__meeting-space" id="tu-13"></div></td> <td><div class="calendar__meeting-space" id="we-13"></div></td> <td><div class="calendar__meeting-space" id="th-13"></div></td> <td><div class="calendar__meeting-space" id="fr-13"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>14:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-14"></div></td> <td><div class="calendar__meeting-space" id="tu-14"></div></td> <td><div class="calendar__meeting-space" id="we-14"></div></td> <td><div class="calendar__meeting-space" id="th-14"></div></td> <td><div class="calendar__meeting-space" id="fr-14"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>15:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-15"></div></td> <td><div class="calendar__meeting-space" id="tu-15"></div></td> <td><div class="calendar__meeting-space" id="we-15"></div></td> <td><div class="calendar__meeting-space" id="th-15"></div></td> <td><div class="calendar__meeting-space" id="fr-15"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>16:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-16"></div></td> <td><div class="calendar__meeting-space" id="tu-16"></div></td> <td><div class="calendar__meeting-space" id="we-16"></div></td> <td><div class="calendar__meeting-space" id="th-16"></div></td> <td><div class="calendar__meeting-space" id="fr-16"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>17:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-17"></div></td> <td><div class="calendar__meeting-space" id="tu-17"></div></td> <td><div class="calendar__meeting-space" id="we-17"></div></td> <td><div class="calendar__meeting-space" id="th-17"></div></td> <td><div class="calendar__meeting-space" id="fr-17"></div></td> </tr> <tr class="calendar__row"> <td><div class="calendar__time"><span>18:00</span></div></td> <td><div class="calendar__meeting-space" id="mo-18"></div></td> <td><div class="calendar__meeting-space" id="tu-18"></div></td> <td><div class="calendar__meeting-space" id="we-18"></div></td> <td><div class="calendar__meeting-space" id="th-18"></div></td> <td><div class="calendar__meeting-space" id="fr-18"></div></td> </tr> </tbody> </table> <div class="calendar"> </div> </div>  <div class="d-none new-event"> <form action="" class="new-event__feilds"> <label for="event-name">Name of the event:</label> <input id="event-name" type="text" minlength="2" placeholder="Event name"> <span class="new-event__parts-label">Participants:</span> <div class="participants"> <button class="new-event__participants" type="button">Select People</button> <div class="d-none new-event__participants-menu rounded shadow"> <span class="d-block menu-option" data-person="all members">All members</span> <span class="d-block menu-option" data-person="john">John</span> <span class="d-block menu-option" data-person="anna">Anna</span> <span class="d-block menu-option" data-person="julia">Julia</span> <span class="d-block menu-option" data-person="sam">Sam</span> <span class="d-block menu-option" data-person="joshua">Joshua</span> <span class="d-block menu-option" data-person="oksana">Oksana</span> <span class="d-block menu-option" data-person="maksym">Maksym</span> </div> </div> <label for="day">Day:</label> <div class="cup styled-select"> <select class="cup decorated select-option" name="day" id="day"> <option class="d-none" value="" disabled selected>Select day</option> <option>Monday</option> <option>Tuesday</option> <option>Wensday</option> <option>Thursday</option> <option>Friday</option> </select> </div> <label for="time">Time:</label> <div class="cup styled-select"> <select class="cup decorated select-option" name="time" id="time"> <option class="d-none" value="" disabled selected>Select time</option> <option>10:00</option> <option>11:00</option> <option>12:00</option> <option>13:00</option> <option>14:00</option> <option>15:00</option> <option>16:00</option> <option>17:00</option> <option>18:00</option> </select> </div> </form> <div class="new-event__btns"> <button class="new-event__cancel" type="reset">Cancel</button> <button class="new-event__submit" type="submit">Creat</button> </div> </div> </main> </div> <script src="main.5fbd5d9a.js"></script> </body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/calendar-meeting-room/dist/">
+  <title>Meeting Room Calendar</title>
+  <link rel="stylesheet" href="/main.54166fbf.css">
+<script src="/main.54166fbf.js"></script></head>
+<body>
+  <div class="" id="overlay">
+    <p class="new-event__warning d-none">
+      <span>
+        <img src="https://img.icons8.com/emoji/36/000000/warning-emoji.png">
+        <span class="new-event__warning-message"></span>
+      </span>
+      <img class="cup" id="warning-close" src="https://img.icons8.com/plasticine/36/000000/close-window.png">
+    </p>
+    <p class="successful-message"></p>
+    <div class="delete-container d-none">
+      <div class="delete-popup">
+        <p class="roboto-18">Are you sure you want to delete "Theme" event?</p>
+        <div class="user-select delete-popup__btns">
+          <button class="roboto-18 semibold-text delete-popup__btn" id="delete-not">No</button>
+          <button class="roboto-18 semibold-text delete-popup__btn" id="delete">Yes</button>
+        </div>
+      </div>
+    </div>
+    <main class="calendar-wrapper" id="calendar">
+      <!-- Main Calendar page -->
+      <div class="calendar__main-page ">
+        <div class="calendar-header">
+          <h1 class="roboto-36 green-title-text user-select calendar-header__title">Calendar</h1>
+          <div class="calendar-header__navbar">
+            <div class="calendar-header__select-wrapper">
+              <div class="calendar-header__select">
+                <div class="calendar-header__trigger">
+                  <span class="user-select">Choose name</span>
+                  <div class="arrow"></div>
+                </div>
+                <div class="user-select calendar-header__options">
+                  <span class="calendar-header__option" data-value="all members">All members</span>
+                  <span class="calendar-header__option" data-value="john">John</span>
+                  <span class="calendar-header__option" data-value="anna">Anna</span>
+                  <span class="calendar-header__option" data-value="julia">Julia</span>
+                  <span class="calendar-header__option" data-value="sam">Sam</span>
+                  <span class="calendar-header__option" data-value="joshua">Joshua</span>
+                  <span class="calendar-header__option" data-value="oksana">Oksana</span>
+                  <span class="calendar-header__option" data-value="maksym">Maksym</span>
+                </div>
+              </div>
+            </div>
+            <button class="cup calendar-header__new-ivent">New Event &nbsp;&nbsp; &#43;</button>
+          </div>
+        </div>
+        <table class="user-select calendar">
+          <thead>
+            <tr class="roboto-18 semibold-text calendar__top-row">
+              <th>Time</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="calendar__row">
+              <td><div class=""><span>10:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-10"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-10"></div></td>
+              <td><div class="calendar__meeting-space" id="we-10"></div></td>
+              <td><div class="calendar__meeting-space" id="th-10"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-10"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>11:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-11"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-11"></div></td>
+              <td><div class="calendar__meeting-space" id="we-11"></div></td>
+              <td><div class="calendar__meeting-space" id="th-11"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-11"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>12:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-12"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-12"></div></td>
+              <td><div class="calendar__meeting-space" id="we-12"></div></td>
+              <td><div class="calendar__meeting-space" id="th-12"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-12"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>13:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-13"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-13"></div></td>
+              <td><div class="calendar__meeting-space" id="we-13"></div></td>
+              <td><div class="calendar__meeting-space" id="th-13"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-13"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>14:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-14"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-14"></div></td>
+              <td><div class="calendar__meeting-space" id="we-14"></div></td>
+              <td><div class="calendar__meeting-space" id="th-14"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-14"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>15:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-15"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-15"></div></td>
+              <td><div class="calendar__meeting-space" id="we-15"></div></td>
+              <td><div class="calendar__meeting-space" id="th-15"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-15"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>16:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-16"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-16"></div></td>
+              <td><div class="calendar__meeting-space" id="we-16"></div></td>
+              <td><div class="calendar__meeting-space" id="th-16"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-16"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>17:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-17"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-17"></div></td>
+              <td><div class="calendar__meeting-space" id="we-17"></div></td>
+              <td><div class="calendar__meeting-space" id="th-17"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-17"></div></td>
+            </tr>
+            <tr class="calendar__row">
+              <td><div class="calendar__time"><span>18:00</span></div></td>
+              <td><div class="calendar__meeting-space" id="mo-18"></div></td>
+              <td><div class="calendar__meeting-space" id="tu-18"></div></td>
+              <td><div class="calendar__meeting-space" id="we-18"></div></td>
+              <td><div class="calendar__meeting-space" id="th-18"></div></td>
+              <td><div class="calendar__meeting-space" id="fr-18"></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="calendar">
+        </div>
+      </div>
+      <!-- Add New Event -->
+      <div class="new-event d-none">
+        <form action="" class="new-event__feilds">  
+          <label for="event-name">Name of the event:</label>
+          <input id="event-name" type="text" minlength="2" placeholder="Event name">
+          <span class="new-event__parts-label">Participants:</span>
+          <div class="participants">
+            <button class="new-event__participants" type="button">Select People</button>
+            <div class="d-none shadow rounded new-event__participants-menu">
+              <span class="d-block menu-option" data-person="all members">All members</span>
+              <span class="d-block menu-option" data-person="john">John</span>
+              <span class="d-block menu-option" data-person="anna">Anna</span>
+              <span class="d-block menu-option" data-person="julia">Julia</span>
+              <span class="d-block menu-option" data-person="sam">Sam</span>
+              <span class="d-block menu-option" data-person="joshua">Joshua</span>
+              <span class="d-block menu-option" data-person="oksana">Oksana</span>
+              <span class="d-block menu-option" data-person="maksym">Maksym</span>
+            </div>
+          </div>
+          <label for="day">Day:</label>
+          <div class="cup styled-select">
+            <select class="cup select-option decorated" name="day" id="day">
+              <option class="d-none" value="" disabled="" selected="">Select day</option>
+              <option>Monday</option>
+              <option>Tuesday</option>
+              <option>Wednesday</option>
+              <option>Thursday</option>
+              <option>Friday</option>
+            </select>
+          </div>
+          <label for="time">Time:</label>
+          <div class="cup styled-select">
+            <select class="cup select-option decorated" name="time" id="time">
+              <option class="d-none" value="" disabled="" selected="">Select time</option>
+              <option>10:00</option>
+              <option>11:00</option>
+              <option>12:00</option>
+              <option>13:00</option>
+              <option>14:00</option>
+              <option>15:00</option>
+              <option>16:00</option>
+              <option>17:00</option>
+              <option>18:00</option>
+            </select>
+          </div>
+        </form>
+        <div class="new-event__btns">
+          <button class="new-event__cancel" type="reset">Cancel</button>
+          <button class="new-event__submit" type="submit">Creat</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/main.fb6bbcaf.js"></script>
+</body>
+</html>

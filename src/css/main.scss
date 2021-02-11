@@ -243,7 +243,14 @@ body {
   &__meeting-space {
     width: 100%;
     height: 100%;
-    @include flex-align-center;
+
+    &:hover #remove-meeting {
+      display: inline-block;
+    }
+
+    &:hover .calendar__meeting {
+      width: 90%;
+    }
   }
 
   .occupied {
@@ -251,17 +258,27 @@ body {
     background-color: darken(rgba($main-color, 0.6), 10%);
   }
 
+  &__meeting-wrapper {
+    width: 100%;
+    height: 100%;
+    @include flex-align-center;
+  }
+
+  .hold {
+    border: 1px solid darken($main-color, 50%);
+  }
+
   &__meeting {
-    display: block;
+    width: 100%;
+    position: relative;
+    display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .tooltip {
-    width: 90%;
-    position: relative;
-    display: inline-block;
+  #remove-meeting {
+    display: none;
   }
 
   .tooltiptext {
