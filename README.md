@@ -4,7 +4,8 @@
 
 ### Description
 
-The meeting calendar for one working week that includes 7 people
+Here you can enjoy playing with the meeting calendar for one working week that includes 7 people. You can add new meetings, filter meetings by participants, delete a meeting, or move it to another appropriate time for you. 
+Enjoy your time with the Calendar Meeting Room!
 
 ### Technologies are used
 
