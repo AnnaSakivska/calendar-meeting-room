@@ -117,8 +117,6 @@ function removeEventsDOM() {
 function openNewEventWindow() {
   messageSuccessful.style.top = '-14rem'
   closeWarning()
-  memberShownNameDOM.innerText = 'Choose name'
-  removeEventsDOM()
   calendarNameOptions.forEach(el => el.classList.remove('selected'))
   newEventWindowDOM.classList.remove("d-none")
   calendarWindowDOM.classList.add("d-none")
@@ -171,7 +169,6 @@ function submitNewEvent() {
 
   if (meetings.some(meeting => meeting.time === planningMeeting.time && meeting.day === planningMeeting.day)) {
     warningMessageText.innerText = 'Failed to create the event. Time slot is already booked!'
-    console.log('should show warning')
     addWarning()
     return
   }
@@ -179,6 +176,10 @@ function submitNewEvent() {
   meetings.push(planningMeeting)
   localStorage.setItem('meetings', JSON.stringify(meetings))
   closeNewEventWindow()
+  document.querySelector('[data-value="all members"]').classList.add('selected')
+  document.querySelector('.calendar-header__trigger span').textContent = 'All members'
+  // eslint-disable-next-line no-use-before-define
+  insertMeeting(meetings)
   messageSuccessful.style.top = '-6rem'
   showSuccessfulMessage('The new meeting was successfully created!')
 }
@@ -186,12 +187,15 @@ submitBtnDOM.addEventListener('click', submitNewEvent)
 
 function cancelNewEvent() {
   closeNewEventWindow()
+  memberShownNameDOM.innerText = 'Choose name'
+  removeEventsDOM()
 }
 cancelBtnDOM.addEventListener('click', cancelNewEvent)
 
 // 2. SHOW EVENT at Calendar page 
 let filteredMeetings
 const allParticipants = []
+
 calendarNameOptions.forEach(option => {
   if (option.getAttribute('data-value') !== 'all members') allParticipants.push(option.getAttribute('data-value'))
 })
@@ -265,7 +269,7 @@ deleteOkBtn.addEventListener('click', deleteMeeting)
 
 deleteNotBtn.addEventListener('click', () => deleteMeetingContainer.classList.add('d-none'))
 
-// DRAG & DROP 
+// 4. DRAG & DROP 
 let currentWrapperId
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00']

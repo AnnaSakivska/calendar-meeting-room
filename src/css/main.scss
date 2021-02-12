@@ -164,17 +164,7 @@ body {
       background-color: darken($main-color, 20%);
     }
   }
-
-  .custom-option:hover {
-    cursor: pointer;
-    background-color: lighten($main-color, 20%);
-  }
-
-  .custom-option.selected {
-    color: #ffffff;
-    background-color: darken($main-color, 20%);
-  }
-
+  
   .arrow {
     position: relative;
     height: 12px;
@@ -279,38 +269,6 @@ body {
 
   #remove-meeting {
     display: none;
-  }
-
-  .tooltiptext {
-    visibility: hidden;
-    width: 16rem;
-    background-color: darken(rgba($main-color, 0.6), 40%);
-    color: #ffffff;
-    border-radius: 8px;
-    padding: 14px;
-    position: absolute;
-    bottom: 4rem;
-    left: -2.2rem;
-    z-index: 1;
-    text-align: center;
-  }
-
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-  }
-
-  .tooltiptext:before {
-    content: '';
-    width: 0px;
-    height: 0px;
-    position: absolute;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid darken(rgba($main-color, 0.6), 40%);
-    border-bottom: 10px solid transparent;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -20px;
   }
 }
 
