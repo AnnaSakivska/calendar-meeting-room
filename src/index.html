@@ -9,6 +9,26 @@
 </head>
 <body>
   <div class="" id="overlay">
+    <div class="popup-container">
+      <div class="popup authorise-popup">
+        <p class="roboto-22 semibold-text">Please authorise!</p>
+        <div class="cup styled-select authorise-popup__select">
+          <select class="cup select-option decorated" name="name" id="authorise-select">
+            <option class="d-none" value="" disabled selected>Select user</option>
+            <option>John</option>
+            <option value="Anna">Anna (admin)</option>
+            <option>Julia</option>
+            <option>Sam</option>
+            <option>Joshua</option>
+            <option>Oksana</option>
+            <option>Maksym</option>
+          </select>
+        </div>
+        <div class="user-select authorise-popup__btns">
+          <button class="roboto-18 semibold-text authorise-popup__btn" id="authorise">Confirm</button>
+        </div>
+      </div>
+    </div>
     <p class="new-event__warning d-none">
       <span>
         <img src="https://img.icons8.com/emoji/36/000000/warning-emoji.png"/>
@@ -17,8 +37,8 @@
       <img class="cup" id="warning-close" src="https://img.icons8.com/plasticine/36/000000/close-window.png"/>
     </p>
     <p class="successful-message"></p>
-    <div class="delete-container d-none">
-      <div class="delete-popup">
+    <div class="delete-popup-container d-none">
+      <div class="popup delete-popup">
         <p class="roboto-18">Are you sure you want to delete "Theme" event?</p>
         <div class="user-select delete-popup__btns">
           <button class="roboto-18 semibold-text delete-popup__btn" id="delete-not">No</button>
@@ -32,6 +52,10 @@
         <div class="calendar-header">
           <h1 class="roboto-36 green-title-text user-select calendar-header__title">Calendar</h1>
           <div class="calendar-header__navbar">
+            <div class="calendar-header__authorized-wrapper">
+              <h3 class="roboto-14 green-title-text">You authorized as:</h3>
+              <button class="cup calendar-header__authorized">User</button>
+            </div>
             <div class="calendar-header__select-wrapper">
               <div class="calendar-header__select">
                 <div class="calendar-header__trigger">

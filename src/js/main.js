@@ -1,8 +1,17 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
+/* eslint max-classes-per-file: off */
+/* eslint-disable class-methods-use-this */
+
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import 'airbnb-browser-shims'
+
+const authorisePopupDom = document.querySelector('.popup-container')
+const authorizationBtnDOM = document.querySelector('.authorise-popup__btn')
+const authoriseSelectDOM = document.getElementById('authorise-select')
+const authorisedBtnDOM = document.querySelector('.calendar-header__authorized')
 
 const calendarWindowDOM = document.querySelector('.calendar__main-page')
 const newEventWindowDOM = document.querySelector('.new-event')
@@ -25,9 +34,11 @@ const memberShownNameDOM = document.querySelector('.calendar-header__trigger spa
 const calendarNameOptions = document.querySelectorAll('.calendar-header__option')
 const clendarMeetingSpotDom = document.querySelectorAll('.calendar__meeting-space')
 
+
 // 1. ADD NEW EVENT FORM
 const meetingparticipants = new Set()
 let meetings = localStorage.getItem('meetings') ? JSON.parse(localStorage.getItem('meetings')) : []
+
 
 // preventing input from reloading on Enter
 meetingThemeInputDOM.addEventListener("keydown", (event) => { if (event.key === "Enter") event.preventDefault() })
@@ -113,16 +124,6 @@ function removeEventsDOM() {
   })
 }
 
-// open & clole new event page
-function openNewEventWindow() {
-  messageSuccessful.style.top = '-14rem'
-  closeWarning()
-  calendarNameOptions.forEach(el => el.classList.remove('selected'))
-  newEventWindowDOM.classList.remove("d-none")
-  calendarWindowDOM.classList.add("d-none")
-}
-addNewEventBtnDOM.addEventListener('click', openNewEventWindow)
-
 function closeNewEventWindow() {
   newEventWindowDOM.classList.add("d-none")
   calendarWindowDOM.classList.remove("d-none")
@@ -178,7 +179,6 @@ function submitNewEvent() {
   closeNewEventWindow()
   document.querySelector('[data-value="all members"]').classList.add('selected')
   document.querySelector('.calendar-header__trigger span').textContent = 'All members'
-  // eslint-disable-next-line no-use-before-define
   insertMeeting(meetings)
   messageSuccessful.style.top = '-6rem'
   showSuccessfulMessage('The new meeting was successfully created!')
@@ -235,96 +235,160 @@ function selectName() {
 }
 document.querySelector('.calendar-header__select-wrapper').addEventListener('click', selectName)
 
-// 3. DELETE The Event
-const deleteMeetingContainer = document.querySelector('.delete-container')
+// 3. Authorization
+const deleteMeetingContainer = document.querySelector('.delete-popup-container')
 const deleteMeetingPopup = document.querySelector('.delete-popup')
 const deleteOkBtn = document.querySelector('#delete')
 const deleteNotBtn = document.querySelector('#delete-not')
-let meetingId
-let meetingToDelete
+let user
 
-function showDeletePop(e) {
-  const { target } = e
-  if (target && target.id === 'remove-meeting') {
-    meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
-    meetingId = target.parentNode.parentNode.id
-    deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${meetingToDelete[0].evenName}" event?`
-    deleteMeetingContainer.classList.remove('d-none')
+class User {
+  constructor(name) {
+    this.name = name
   }
-}
-clendarMeetingSpotDom.forEach(el => el.addEventListener('click', showDeletePop))
 
-function deleteMeeting() {
-  // delete event from common array 'meetings' and localSrorage
-  const deleteMeetingDOM = document.querySelector(`#${meetingId}`)
-  meetings = meetings.filter((meeting) => meetingId !== meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
-  localStorage.setItem('meetings', JSON.stringify(meetings))
-  // delete event from the DOM
-  deleteMeetingDOM.innerHTML = ''
-  deleteMeetingContainer.classList.add('d-none')
-  showSuccessfulMessage(`The "${meetingToDelete[0].evenName}" meeting was successfully deleted!`)
-  messageSuccessful.style.top = '-6rem'
-}
-deleteOkBtn.addEventListener('click', deleteMeeting)
+  addDraggableAtr(ev) { ev.target.closest('.calendar__meeting-wrapper').setAttribute('draggable', false) }
 
-deleteNotBtn.addEventListener('click', () => deleteMeetingContainer.classList.add('d-none'))
-
-// 4. DRAG & DROP 
-let currentWrapperId
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00']
-
-function dragStart(ev) {
-  ev.dataTransfer.effectAllowed = 'move'
-  ev.dataTransfer.setData("text", ev.target.id)
-  setTimeout(() => (this.classList.add('d-none')), 0)
-  this.children[0].classList.add('hold')
-  currentWrapperId = this.id
-}
-
-function dragEnd(ev) {
-  ev.preventDefault()
-  document.getElementById(currentWrapperId).classList.remove('d-none')
-  this.children[0].classList.remove('hold')
-}
-
-function dragOver(ev) {
-  ev.preventDefault()
-}
-
-function drop(ev) {
-  ev.preventDefault()
-  this.classList.remove('d-none')
-
-  if (meetings.some(meeting => meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase() === this.id)) {
+  openNewEventWindow() {
     closeWarning()
-    warningMessage.children[0].children[1].innerHTML = 'Failed to move the event. Time slot is already taken!'
+    warningMessage.children[0].children[1].innerHTML = 'Only the admin can add new meeting!'
     warningMessage.style.top = '-6rem'
     addWarning()
-    return
   }
 
-  warningMessage.classList.add('d-none')
-  const data = ev.dataTransfer.getData("text")
-  ev.target.appendChild(document.getElementById(data))
-  ev.target.children[0].id = ev.target.id.concat('-', 'drag')
-
-  meetings = meetings.map(meeting => {
-    if (currentWrapperId === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase()) {
-      // eslint-disable-next-line prefer-destructuring
-      meeting.day = daysOfWeek.filter(day => day.substring(0, 2).toLowerCase() === this.id.substring(0, 2))[0]
-      meeting.time = hours.filter(time => time.substring(0, 2) === this.id.substring(3, 5))[0]
-    }
-    return meeting
-  })
-  localStorage.setItem('meetings', JSON.stringify(meetings))
+  showDeletePop(e) {
+    closeWarning()
+    warningMessage.children[0].children[1].innerHTML = 'Only the admin can remove the meeting!'
+    warningMessage.style.top = '-6rem'
+    addWarning()
+  }
 }
 
-clendarMeetingSpotDom.forEach(el => el.addEventListener('drop', drop))
-clendarMeetingSpotDom.forEach(el => el.addEventListener('dragstart', dragStart))
-clendarMeetingSpotDom.forEach(el => el.addEventListener('dragend', dragEnd))
-clendarMeetingSpotDom.forEach(el => el.addEventListener('dragover', dragOver))
+class Admin extends User {
+  constructor(name) {
+    super(name)
+    this.name = name
+    this.currentWrapperId = ''
+    this.daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    this.hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00']
+    this.meetingId = ''
+    this.meetingToDelete = {}
+  }
+
+  openNewEventWindow() {
+    messageSuccessful.style.top = '-14rem'
+    closeWarning()
+    calendarNameOptions.forEach(el => el.classList.remove('selected'))
+    newEventWindowDOM.classList.remove("d-none")
+    calendarWindowDOM.classList.add("d-none")
+  }
+
+  addDraggableAtr(ev) { ev.target.closest('.calendar__meeting-wrapper').setAttribute('draggable', true) }
 
 
+  dragStart(ev) {
+    const target = ev.target.closest('.calendar__meeting-space')
+    ev.dataTransfer.effectAllowed = 'move'
+    ev.dataTransfer.setData("text", ev.target.id)
+    setTimeout(() => (ev.target.classList.add('d-none')), 0)
+    target.children[0].classList.add('hold')
+    this.currentWrapperId = target.id
+  }
 
+  dragEnd(ev) {
+    ev.preventDefault()
+    const target = ev.target.closest('.calendar__meeting-space')
+    document.getElementById(this.currentWrapperId).classList.remove('d-none')
+    target.children[0].classList.remove('hold')
+    target.children[0].classList.remove('d-none')
+  }
 
+  dragOver(ev) {
+    ev.preventDefault()
+  }
+
+  drop(ev) {
+    ev.preventDefault()
+    const target = ev.target.closest('.calendar__meeting-space')
+    target.classList.remove('d-none')
+    if (meetings.some(meeting => meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase() === target.id)) {
+      closeWarning()
+      warningMessage.children[0].children[1].innerHTML = 'Failed to move the event. Time slot is already taken!'
+      warningMessage.style.top = '-6rem'
+      addWarning()
+      return
+    }
+
+    warningMessage.classList.add('d-none')
+    const data = ev.dataTransfer.getData("text")
+    ev.target.appendChild(document.getElementById(data))
+    ev.target.children[0].id = ev.target.id.concat('-', 'drag')
+
+    meetings = meetings.map(meeting => {
+      if (this.currentWrapperId === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase()) {
+        meeting.day = this.daysOfWeek.filter(day => day.substring(0, 2).toLowerCase() === target.id.substring(0, 2))[0]
+        meeting.time = this.hours.filter(time => time.substring(0, 2) === target.id.substring(3, 5))[0]
+      }
+      return meeting
+    })
+    localStorage.setItem('meetings', JSON.stringify(meetings))
+  }
+
+  showDeletePop(e) {
+    const { target } = e
+    if (target && target.id === 'remove-meeting') {
+      this.meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
+      this.meetingId = target.parentNode.parentNode.id
+      deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingToDelete[0].evenName}" event?`
+      deleteMeetingContainer.classList.remove('d-none')
+    }
+  }
+
+  deleteMeeting() {
+    // delete event from common array 'meetings' and localSrorage
+    const deleteMeetingDOM = document.querySelector(`#${this.meetingId}`)
+    meetings = meetings.filter((meeting) => this.meetingId !== meeting.day.substring(0, 2).concat('-', meeting.time.substring(0, 2)).toLowerCase())
+    localStorage.setItem('meetings', JSON.stringify(meetings))
+    // delete event from the DOM
+    deleteMeetingDOM.innerHTML = ''
+    deleteMeetingContainer.classList.add('d-none')
+    showSuccessfulMessage(`The "${this.meetingToDelete[0].evenName}" meeting was successfully deleted!`)
+    messageSuccessful.style.top = '-6rem'
+  }
+}
+
+insertMeeting(meetings)
+
+function authorise() {
+  if (authoriseSelectDOM.value === 'Anna') {
+    user = new Admin(authoriseSelectDOM.value)
+    authorisePopupDom.classList.add('d-none')
+    addNewEventBtnDOM.classList.remove('disabled-btn')
+    authorisedBtnDOM.innerText = authoriseSelectDOM.value
+  } else if (authoriseSelectDOM.value) {
+    user = new User(authoriseSelectDOM.value)
+    authorisePopupDom.classList.add('d-none')
+    addNewEventBtnDOM.classList.add('disabled-btn')
+    authorisedBtnDOM.innerText = authoriseSelectDOM.value
+  }
+}
+
+authorizationBtnDOM.addEventListener('click', authorise)
+
+authorisedBtnDOM.addEventListener('click', () => authorisePopupDom.classList.remove('d-none'))
+
+// open & clole new event page
+addNewEventBtnDOM.addEventListener('click', () => user.openNewEventWindow())
+
+clendarMeetingSpotDom.forEach(el => el.addEventListener('mousedown', (ev) => user.addDraggableAtr(ev)))
+
+// Drag & Drop
+clendarMeetingSpotDom.forEach(el => el.addEventListener('drop', (ev) => user.drop(ev)))
+clendarMeetingSpotDom.forEach(el => el.addEventListener('dragstart', (ev) => user.dragStart(ev)))
+clendarMeetingSpotDom.forEach(el => el.addEventListener('dragend', (ev) => user.dragEnd(ev)))
+clendarMeetingSpotDom.forEach(el => el.addEventListener('dragover', (ev) => user.dragOver(ev)))
+
+// Delete meeting
+clendarMeetingSpotDom.forEach(el => el.addEventListener('click', (ev) => user.showDeletePop(ev)))
+deleteOkBtn.addEventListener('click', () => user.deleteMeeting())
+deleteNotBtn.addEventListener('click', () => deleteMeetingContainer.classList.add('d-none'))
