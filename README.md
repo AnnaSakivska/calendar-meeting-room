@@ -18,6 +18,7 @@ For building this app the Parcel was used as a bundler, which has built-in suppo
 ### Getting Started
 
 Clone this project
+
 Install all the needed packages by running npm install
 
 #### Instructions
