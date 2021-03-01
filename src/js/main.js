@@ -119,7 +119,6 @@ closeWarningDOM.addEventListener('click', closeWarning)
 // Remove all events from DOM
 function removeEventsDOM() {
   clendarMeetingSpotDom.forEach(spot => {
-    // eslint-disable-next-line no-param-reassign
     spot.innerHTML = ''
   })
 }
@@ -247,7 +246,7 @@ class User {
     this.name = name
   }
 
-  addDraggableAtr(ev) { ev.target.closest('.calendar__meeting-wrapper').setAttribute('draggable', false) }
+  addDraggableAtr(ev) { if (ev.target.closest('.calendar__meeting-wrapper')) ev.target.closest('.calendar__meeting-wrapper').setAttribute('draggable', false) }
 
   openNewEventWindow() {
     closeWarning()
@@ -258,9 +257,11 @@ class User {
 
   showDeletePop(e) {
     closeWarning()
-    warningMessage.children[0].children[1].innerHTML = 'Only the admin can remove the meeting!'
-    warningMessage.style.top = '-6rem'
-    addWarning()
+    if (e.target.closest('.caledar__meeting-remove')) {
+      warningMessage.children[0].children[1].innerHTML = 'Only the admin can remove the meeting!'
+      warningMessage.style.top = '-6rem'
+      addWarning()
+    }
   }
 }
 
@@ -283,11 +284,12 @@ class Admin extends User {
     calendarWindowDOM.classList.add("d-none")
   }
 
-  addDraggableAtr(ev) { ev.target.closest('.calendar__meeting-wrapper').setAttribute('draggable', true) }
+  addDraggableAtr(ev) { if (ev.target.closest('.calendar__meeting-wrapper')) ev.target.closest('.calendar__meeting-wrapper').setAttribute('draggable', true) }
 
 
   dragStart(ev) {
     const target = ev.target.closest('.calendar__meeting-space')
+    if (!(ev.target.closest('.calendar-header__select'))) document.querySelector('.calendar-header__select').classList.remove('open')
     ev.dataTransfer.effectAllowed = 'move'
     ev.dataTransfer.setData("text", ev.target.id)
     setTimeout(() => (ev.target.classList.add('d-none')), 0)
