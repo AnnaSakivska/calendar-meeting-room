@@ -30,6 +30,7 @@ class Admin extends User {
     this.daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
     this.hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00']
     this.meetingId = ''
+    this.meetingTitle = ''
     this.meetingToDelete = {}
     this.draggedMeeting = {}
   }
@@ -115,10 +116,15 @@ class Admin extends User {
   showDeletePop(e) {
     const { target } = e
     if (target && target.id === 'remove-meeting') {
-      this.meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
-      this.meetingId = target.parentNode.parentNode.id
-      deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingToDelete[0].evenName}" event?`
-      deleteMeetingContainer.classList.remove('d-none')
+      request.makeGetRequest()
+        .then((res) => { meetings = res })
+        .then(() => {
+          this.meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
+          this.meetingId = target.parentNode.parentNode.id
+          this.meetingTitle = JSON.parse(this.meetingToDelete[0].data).evenName
+          deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingTitle}" event?`
+          deleteMeetingContainer.classList.remove('d-none')
+        })
     }
   }
 
@@ -131,7 +137,8 @@ class Admin extends User {
     deleteMeetingDOM.innerHTML = ''
     deleteMeetingContainer.classList.add('d-none')
 
-    warnningMessage = `The "${this.meetingToDelete[0].evenName}" meeting was successfully deleted!`
+    // console.log(this.meetingToDelete[0])
+    warnningMessage = `The "${this.meetingTitle}" meeting was successfully deleted!`
     warnning = new Warnning(messageSuccessful, '-6rem', warnningMessage)
     warnning.showSuccessfulMessage()
   }
