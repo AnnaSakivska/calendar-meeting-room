@@ -98,14 +98,8 @@ class Admin extends User {
         this.draggedMeeting = JSON.parse(meetings.filter(meeting => this.currentWrapperId === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())[0].data)
         this.draggedMeeting.day = this.daysOfWeek.filter(day => day.substring(0, 2).toLowerCase() === target.id.substring(0, 2))[0]
         this.draggedMeeting.time = this.hours.filter(time => time.substring(0, 2) === target.id.substring(3, 5))[0]
-        request.deletEventData(draggedEvID)
-          .then(() => {
-            request.makeGetRequest()
-              .then((res) => { meetings = res })
-          })
-      })
-      .then(() => {
-        request.postEventData(this.draggedMeeting)
+
+        request.putEventData(this.draggedMeeting, draggedEvID)
           .then(() => {
             request.makeGetRequest()
               .then((res) => { meetings = res })
@@ -137,7 +131,6 @@ class Admin extends User {
     deleteMeetingDOM.innerHTML = ''
     deleteMeetingContainer.classList.add('d-none')
 
-    // console.log(this.meetingToDelete[0])
     warnningMessage = `The "${this.meetingTitle}" meeting was successfully deleted!`
     warnning = new Warnning(messageSuccessful, '-6rem', warnningMessage)
     warnning.showSuccessfulMessage()

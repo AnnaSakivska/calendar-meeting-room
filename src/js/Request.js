@@ -19,6 +19,15 @@ class Request {
     return res
   }
 
+  async putEventData(event, id) {
+    const res = await axios({
+      method: 'put',
+      url: `${this.baseUrl}/${id}`,
+      data: JSON.stringify({ data: JSON.stringify(event) })
+    })
+    return res
+  }
+
   async deletEventData(id) {
     await axios.delete(`${this.baseUrl}/${id}`)
   }

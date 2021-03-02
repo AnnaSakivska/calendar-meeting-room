@@ -109,11 +109,7 @@ closeWarningDOM.addEventListener('click', () => {
 })
 
 // Remove all events from DOM
-function removeEventsDOM() {
-  clendarMeetingSpotDom.forEach(spot => {
-    spot.innerHTML = ''
-  })
-}
+function removeEventsDOM() { clendarMeetingSpotDom.forEach(spot => { spot.innerHTML = '' }) }
 
 function closeNewEventWindow() {
   newEventWindowDOM.classList.add("d-none")
@@ -182,7 +178,6 @@ function submitNewEvent() {
           insertMeeting(meetings)
         })
     })
-    .catch(err => console.log(err))
 
   closeNewEventWindow()
   document.querySelector('[data-value="all members"]').classList.add('selected')
@@ -204,13 +199,10 @@ cancelBtnDOM.addEventListener('click', cancelNewEvent)
 let filteredMeetings
 const allParticipants = []
 
-calendarNameOptions.forEach(option => {
-  if (option.getAttribute('data-value') !== 'all members') allParticipants.push(option.getAttribute('data-value'))
-})
+calendarNameOptions.forEach(option => { if (option.getAttribute('data-value') !== 'all members') allParticipants.push(option.getAttribute('data-value')) })
 
 // insert meeting into the DOM
 function insertMeeting(filteredArray) {
-
   if (filteredArray) filteredArray.forEach(meeting => {
     const parsedMeeting = JSON.parse(meeting.data)
     const meetingStop = document.getElementById(parsedMeeting.day.substring(0, 2).concat('-', parsedMeeting.time.substring(0, 2)).toLowerCase())
@@ -234,17 +226,15 @@ function selectName() {
         this.closest('.calendar-header__select').querySelector('.calendar-header__trigger span').textContent = this.textContent
         removeEventsDOM()
         chosenName = this.textContent
-        if (this.textContent === 'All members' && meetings) {
-          request.makeGetRequest()
-            .then((data) => { meetings = data })
-            .then(() => {
-              insertMeeting(meetings)
-            })
-        }
-        else if (chosenName && meetings) {
-          filteredMeetings = meetings.filter(meeting => JSON.parse(meeting.data).participants.includes(chosenName.toLowerCase()))
-          insertMeeting(filteredMeetings)
-        }
+        request.makeGetRequest()
+          .then((data) => { meetings = data })
+          .then(() => {
+            if (this.textContent === 'All members' && meetings) insertMeeting(meetings)
+            else if (chosenName && meetings) {
+              filteredMeetings = meetings.filter(meeting => JSON.parse(meeting.data).participants.includes(chosenName.toLowerCase()))
+              insertMeeting(filteredMeetings)
+            }
+          })
       }
     })
   })
