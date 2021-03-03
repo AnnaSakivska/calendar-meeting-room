@@ -1,16 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 import User from './User'
+import * as el from './DOMInteraction'
+
 import Warnning from './Warnning'
 import request from './Request'
-
-const messageSuccessful = document.querySelector('.successful-message')
-const calendarNameOptions = document.querySelectorAll('.calendar-header__option')
-const newEventWindowDOM = document.querySelector('.new-event')
-const calendarWindowDOM = document.querySelector('.calendar__main-page')
-const warningMessage = document.querySelector('.new-event__warning')
-const deleteMeetingPopup = document.querySelector('.delete-popup')
-const deleteMeetingContainer = document.querySelector('.delete-popup-container')
 
 let warnningMessage
 let warnning
@@ -36,16 +30,16 @@ class Admin extends User {
   }
 
   openNewEventWindow() {
-    messageSuccessful.style.top = '-14rem'
+    el.messageSuccessful.style.top = '-14rem'
     this.warnning.closeWarning()
     this.succWarning.closeWarning()
-    calendarNameOptions.forEach(el => el.classList.remove('selected'))
-    newEventWindowDOM.classList.remove("d-none")
-    calendarWindowDOM.classList.add("d-none")
+    el.calendarNameOptions.forEach(elem => elem.classList.remove('selected'))
+    el.newEventWindowDOM.classList.remove("d-none")
+    el.calendarWindowDOM.classList.add("d-none")
   }
 
   addDraggableAtr(ev) {
-    if (ev.target.closest('.calendar__meeting-wrapper')) this.calendarMeetingWrapper.forEach(el => el.setAttribute('draggable', true))
+    if (ev.target.closest('.calendar__meeting-wrapper')) this.calendarMeetingWrapper.forEach(elem => elem.setAttribute('draggable', true))
   }
 
   dragStart(ev) {
@@ -80,13 +74,13 @@ class Admin extends User {
     if (meetings.some(meeting => JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase() === target.id)) {
       this.warnning.closeWarning()
       this.succWarning.closeWarning()
-      warningMessage.children[0].children[1].innerHTML = 'Failed to move the event. Time slot is already taken!'
-      warningMessage.style.top = '-6rem'
+      el.warningMessage.children[0].children[1].innerHTML = 'Failed to move the event. Time slot is already taken!'
+      el.warningMessage.style.top = '-6rem'
       this.warnning.addWarning()
       return
     }
 
-    warningMessage.classList.add('d-none')
+    el.warningMessage.classList.add('d-none')
     const data = ev.dataTransfer.getData("text")
     ev.target.appendChild(document.getElementById(data))
     ev.target.children[0].id = ev.target.id.concat('-', 'drag')
@@ -116,23 +110,23 @@ class Admin extends User {
           this.meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
           this.meetingId = target.parentNode.parentNode.id
           this.meetingTitle = JSON.parse(this.meetingToDelete[0].data).evenName
-          deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingTitle}" event?`
-          deleteMeetingContainer.classList.remove('d-none')
+          el.deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingTitle}" event?`
+          el.deleteMeetingContainer.classList.remove('d-none')
         })
     }
   }
 
-  async deleteMeeting() {
+  deleteMeeting() {
     // delete event from common array 'meetings' and localSrorage
     const deleteMeetingDOM = document.querySelector(`#${this.meetingId}`)
     meetings = meetings.filter((meeting) => this.meetingId !== JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
     request.deletEventData(this.meetingToDelete[0].id)
     // delete event from the DOM
     deleteMeetingDOM.innerHTML = ''
-    deleteMeetingContainer.classList.add('d-none')
-
+    el.deleteMeetingContainer.classList.add('d-none')
+    // warning
     warnningMessage = `The "${this.meetingTitle}" meeting was successfully deleted!`
-    warnning = new Warnning(messageSuccessful, '-6rem', warnningMessage)
+    warnning = new Warnning(el.messageSuccessful, '-6rem', warnningMessage)
     warnning.showSuccessfulMessage()
   }
 }
