@@ -12,7 +12,7 @@ let warnningMessage
 let warnning
 let meetings = events.getEvents()
 
-ee.on('delete-event', request.deletEventData)
+ee.on('delete-event', (id) => request.deletEventData(id).then(() => events.getEvents()))
 ee.on('put-event', (event, id) => { request.putEventData(event, id).then(() => events.getEvents()) })
 
 class Admin extends User {

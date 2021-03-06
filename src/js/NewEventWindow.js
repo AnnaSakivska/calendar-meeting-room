@@ -15,9 +15,18 @@ ee.on('post-event', (event, method) => { request.postEventData(event).then(() =>
 
 ee.on('get-and-insert-event', () => {
   request.makeGetRequest()
-    .then(() => {
-      const displayedMeeting = new DisplayedMeeting(events.getEvents(), true)
+    .then((data) => {
+      const displayedMeeting = new DisplayedMeeting(data, true)
       displayedMeeting.insertMeeting()
+    })
+    .then(() => {
+      el.newEventWindowDOM.classList.add("d-none")
+      el.calendarWindowDOM.classList.remove("d-none")
+      el.formDOM.reset()
+      meetingparticipants.clear()
+      el.participantsDOM.innerText = 'Select People'
+      document.querySelector('[data-value="all members"]').classList.add('selected')
+      document.querySelector('.calendar-header__trigger span').textContent = 'All members'
     })
 })
 
@@ -64,16 +73,7 @@ class NewEventWindow {
     el.participantsDOM.style.textTransform = 'capitalize'
   }
 
-  closeNewEventWindow() {
-    el.newEventWindowDOM.classList.add("d-none")
-    el.calendarWindowDOM.classList.remove("d-none")
-    el.formDOM.reset()
-    meetingparticipants.clear()
-    el.participantsDOM.innerText = 'Select People'
-    document.querySelector('[data-value="all members"]').classList.add('selected')
-    document.querySelector('.calendar-header__trigger span').textContent = 'All members'
-    ee.emit('get-and-insert-event')
-  }
+  closeNewEventWindow() { ee.emit('get-and-insert-event') }
 
   creatNewEvent(members) {
     const planningMeeting = {
@@ -96,8 +96,6 @@ class NewEventWindow {
   }
 
   submitNewEvent() {
-    // const warningMessageText = el.warningMessage.children[0].children[1]
-    // const participantsArray = []
     meetingparticipants.forEach(v => this.participantsArray.push(v))
     this.warnning = new Warnning(el.warningMessage)
 
@@ -124,7 +122,6 @@ class NewEventWindow {
     }
 
     this.creatNewEvent(this.participantsArray)
-
   }
 }
 
