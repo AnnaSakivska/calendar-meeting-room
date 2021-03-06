@@ -14,9 +14,19 @@ body {
 }
 
 .calendar-wrapper {
-  max-width: 90rem;
+  height: 100vh;
+  width: 100%;
+  max-width: 96rem;
   min-width: 48rem;
-  margin: 2rem auto;
+  margin: 0 auto;
+  position: relative;
+}
+
+.calendar__main-page {
+  position: absolute;
+  width: 100%;
+  top: calc(50%);
+  transform: translateY(-54%);
 }
 
 .successful-message {
@@ -24,7 +34,7 @@ body {
   width: 100%;
   height: 5rem;
   background-color: rgba(115, 243, 158, 0.534);
-  top: -14rem;
+  top: 0;
   padding: 0 10%;
   font-size: 1.8rem;
   transition: all 0.3;
@@ -96,7 +106,6 @@ body {
 
 // Header
 .calendar-header {
-  margin-top: 6rem;
   height: 8rem;
   margin-bottom: 2rem;
   @include flex-align-center;
@@ -361,8 +370,7 @@ select,
 
 // New event
 .new-event {
-  position: relative;
-  margin-top: 14rem;
+  @extend .calendar__main-page;
   display: grid;
   grid-template-columns: 60% 40%;
   grid-row-gap: 3.6rem;
@@ -372,10 +380,10 @@ select,
     width: 100%;
     height: 5rem;
     background-color: rgba(240, 36, 36, 0.5);
-    top: -14rem;
+    top: 0;
     padding: 0 10%;
     font-size: 1.8rem;
-    transition: all 0.3;
+    z-index: 1;
     @include flex-align-center;
 
     &-message {
@@ -403,7 +411,7 @@ select,
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 27rem;
+    width: 28.8rem;
     max-height: 16rem;
     overflow-x: hidden;
     overflow-y: auto;

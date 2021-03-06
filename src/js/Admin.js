@@ -4,20 +4,20 @@ import User from './User'
 import * as el from './DOMInteraction'
 
 import Warnning from './Warnning'
-import request from './Request'
+import request from './Server'
+import ee from './EventEmitter'
+import events from './EventsSingelton'
 
 let warnningMessage
 let warnning
-let meetings
-request.makeGetRequest()
-  .then((data) => {
-    if (data) meetings = data
-    else meetings = []
-  })
+let meetings = events.getEvents()
+
+ee.on('delete-event', request.deletEventData)
+ee.on('put-event', (event, id) => { request.putEventData(event, id).then(() => events.getEvents()) })
 
 class Admin extends User {
-  constructor(name, warningMessage1, succMessage) {
-    super(name, warningMessage1, succMessage)
+  constructor(name) {
+    super(name)
     this.name = name
     this.calendarMeetingWrapper = document.querySelectorAll('.calendar__meeting-wrapper')
     this.currentWrapperId = ''
@@ -27,20 +27,17 @@ class Admin extends User {
     this.meetingTitle = ''
     this.meetingToDelete = {}
     this.draggedMeeting = {}
+    this.draggedEvID = ''
   }
 
   openNewEventWindow() {
-    el.messageSuccessful.style.top = '-14rem'
     this.warnning.closeWarning()
-    this.succWarning.closeWarning()
     el.calendarNameOptions.forEach(elem => elem.classList.remove('selected'))
     el.newEventWindowDOM.classList.remove("d-none")
     el.calendarWindowDOM.classList.add("d-none")
   }
 
-  addDraggableAtr(ev) {
-    if (ev.target.closest('.calendar__meeting-wrapper')) this.calendarMeetingWrapper.forEach(elem => elem.setAttribute('draggable', true))
-  }
+  addDraggableAtr(ev) { if (ev.target.closest('.calendar__meeting-wrapper')) this.calendarMeetingWrapper.forEach(elem => elem.setAttribute('draggable', true)) }
 
   dragStart(ev) {
     const target = ev.target.closest('.calendar__meeting-space')
@@ -68,65 +65,50 @@ class Admin extends User {
   drop(ev) {
     ev.preventDefault()
     const target = ev.target.closest('.calendar__meeting-space')
-    let draggedEvID
+    const data = ev.dataTransfer.getData("text")
 
     target.classList.remove('d-none')
     if (meetings.some(meeting => JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase() === target.id)) {
       this.warnning.closeWarning()
-      this.succWarning.closeWarning()
       el.warningMessage.children[0].children[1].innerHTML = 'Failed to move the event. Time slot is already taken!'
-      el.warningMessage.style.top = '-6rem'
       this.warnning.addWarning()
       return
     }
 
     el.warningMessage.classList.add('d-none')
-    const data = ev.dataTransfer.getData("text")
     ev.target.appendChild(document.getElementById(data))
     ev.target.children[0].id = ev.target.id.concat('-', 'drag')
 
-    request.makeGetRequest()
-      .then((res) => { meetings = res })
-      .then(() => {
-        draggedEvID = meetings.filter(meeting => this.currentWrapperId === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())[0].id
-        this.draggedMeeting = JSON.parse(meetings.filter(meeting => this.currentWrapperId === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())[0].data)
-        this.draggedMeeting.day = this.daysOfWeek.filter(day => day.substring(0, 2).toLowerCase() === target.id.substring(0, 2))[0]
-        this.draggedMeeting.time = this.hours.filter(time => time.substring(0, 2) === target.id.substring(3, 5))[0]
+    this.draggedEvID = events.getEvents().filter(meeting => this.currentWrapperId === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())[0].id
+    this.draggedMeeting = JSON.parse(events.getEvents().filter(meeting => this.currentWrapperId === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())[0].data)
+    this.draggedMeeting.day = this.daysOfWeek.filter(day => day.substring(0, 2).toLowerCase() === target.id.substring(0, 2))[0]
+    this.draggedMeeting.time = this.hours.filter(time => time.substring(0, 2) === target.id.substring(3, 5))[0]
 
-        request.putEventData(this.draggedMeeting, draggedEvID)
-          .then(() => {
-            request.makeGetRequest()
-              .then((res) => { meetings = res })
-          })
-      })
+    ee.emit('put-event', this.draggedMeeting, this.draggedEvID)
   }
 
   showDeletePop(e) {
     const { target } = e
     if (target && target.id === 'remove-meeting') {
-      request.makeGetRequest()
-        .then((res) => { meetings = res })
-        .then(() => {
-          this.meetingToDelete = meetings.filter((meeting) => target.parentNode.parentNode.id === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
-          this.meetingId = target.parentNode.parentNode.id
-          this.meetingTitle = JSON.parse(this.meetingToDelete[0].data).evenName
-          el.deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingTitle}" event?`
-          el.deleteMeetingContainer.classList.remove('d-none')
-        })
+      this.meetingToDelete = events.getEvents().filter((meeting) => target.parentNode.parentNode.id === JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
+      this.meetingId = target.parentNode.parentNode.id
+      this.meetingTitle = JSON.parse(this.meetingToDelete[0].data).evenName
+      el.deleteMeetingPopup.children[0].innerHTML = `Are you sure you want to delete <br> "${this.meetingTitle}" event?`
+      el.deleteMeetingContainer.classList.remove('d-none')
     }
   }
 
   deleteMeeting() {
-    // delete event from common array 'meetings' and localSrorage
+    // delete event from common array 'meetings' and server
     const deleteMeetingDOM = document.querySelector(`#${this.meetingId}`)
     meetings = meetings.filter((meeting) => this.meetingId !== JSON.parse(meeting.data).day.substring(0, 2).concat('-', JSON.parse(meeting.data).time.substring(0, 2)).toLowerCase())
-    request.deletEventData(this.meetingToDelete[0].id)
+    ee.emit('delete-event', this.meetingToDelete[0].id)
     // delete event from the DOM
     deleteMeetingDOM.innerHTML = ''
     el.deleteMeetingContainer.classList.add('d-none')
     // warning
     warnningMessage = `The "${this.meetingTitle}" meeting was successfully deleted!`
-    warnning = new Warnning(el.messageSuccessful, '-6rem', warnningMessage)
+    warnning = new Warnning(el.messageSuccessful, warnningMessage)
     warnning.showSuccessfulMessage()
   }
 }

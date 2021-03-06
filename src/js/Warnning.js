@@ -1,25 +1,27 @@
+import * as el from './DOMInteraction'
+
+
 class Warnning {
-  constructor(messageContainer, topOffset, message) {
+  constructor(messageContainer, message) {
     this.message = message
     this.messageContainer = messageContainer
-    this.topOffset = topOffset
   }
 
   showSuccessfulMessage() {
     this.messageContainer.innerText = this.message
     this.messageContainer.classList.remove('d-none')
-    this.messageContainer.style.top = this.topOffset ? this.topOffset : '-14rem'
     setTimeout(() => { this.messageContainer.classList.add('d-none') }, 6000)
   }
 
   addWarning() {
     this.messageContainer.classList.remove('d-none')
-    this.messageContainer.style.top = this.topOffset ? this.topOffset : '-14rem'
     setTimeout(() => this.messageContainer.classList.add('d-none'), 6000)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   closeWarning() {
-    this.messageContainer.classList.add('d-none')
+    el.messageSuccessful.classList.add('d-none')
+    el.warningMessage.classList.add('d-none')
   }
 }
 

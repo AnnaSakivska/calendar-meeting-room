@@ -5,8 +5,8 @@ class User {
     this.name = name
     this.warningMessage = warningMessage
     this.calendarMeetingWrapper = document.querySelectorAll('.calendar__meeting-wrapper')
-    this.warnning = new Warnning(warningMessage, '-6rem')
-    this.succWarning = new Warnning(succMessage, '-6rem')
+    this.warnning = new Warnning(warningMessage)
+    this.succWarning = new Warnning(succMessage)
   }
 
   addDraggableAtr(ev) {

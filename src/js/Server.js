@@ -1,8 +1,14 @@
 import axios from 'axios'
 
-class Request {
+class Server {
   constructor() {
+    if (typeof Request.instance === 'object') {
+      return Request.instance
+    }
     this.baseUrl = 'http://158.101.166.74:8080/api/data/anna_sakiv/events'
+    this.meetings = []
+    Request.instance = this
+    return this
   }
 
   async makeGetRequest() {
@@ -33,5 +39,5 @@ class Request {
   }
 }
 
-const request = new Request()
+const request = new Server()
 export default request
