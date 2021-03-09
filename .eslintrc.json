@@ -11,6 +11,7 @@
     "no-process-exit": "off",
     "object-shorthand": "off",
     "class-method-use-this": "off"
+    // "order/properties-alphabetical-order": null
   },
   "env": {
     "browser": true

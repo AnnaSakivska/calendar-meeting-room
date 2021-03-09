@@ -1,23 +1,24 @@
-import ee from './EventEmitter'
-import request from './Server'
+import ee from "./EventEmitter";
+import request from "./Server";
 
 class EventsSingelton {
   constructor() {
-    if (typeof EventsSingelton.instance === 'object') {
-      return EventsSingelton.instance
+    if (typeof EventsSingelton.instance === "object") {
+      return EventsSingelton.instance;
     }
-    this.meetings = []
-    Request.instance = this
-    return this
+    this.meetings = [];
+    Request.instance = this;
+    return this;
   }
 
   getEvents() {
-    request.makeGetRequest()
-      .then(data => { this.meetings = data })
-    return this.meetings
+    request.makeGetRequest().then((data) => {
+      this.meetings = data;
+    });
+    return this.meetings;
   }
 }
 
-const events = new EventsSingelton(ee)
+const events = new EventsSingelton(ee);
 
-export default events
+export default events;
